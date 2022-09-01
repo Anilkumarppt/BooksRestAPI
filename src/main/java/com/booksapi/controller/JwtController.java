@@ -1,11 +1,14 @@
 package com.booksapi.controller;
 
 import com.booksapi.config.JwtTokenUtil;
-import com.booksapi.model.JwtRequest;
-import com.booksapi.model.JwtResponse;
+import com.booksapi.model.dto.UserDto;
+import com.booksapi.payload.JwtRequest;
+import com.booksapi.payload.JwtResponse;
 import com.booksapi.model.User;
 import com.booksapi.service.UserDetailsService;
 
+import com.booksapi.service.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,7 +30,11 @@ public class JwtController {
 	@Autowired
 	private UserDetailsService userDetailsService;
 
+	@Autowired
+	private UserService userService;
 
+	@Autowired
+	private ModelMapper mapper;
 
 	@PostMapping(value = "/login")
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
@@ -43,11 +50,12 @@ public class JwtController {
 
 	@PostMapping(value = "/register")
 	public ResponseEntity<?> saveUser(@RequestBody User user) throws Exception {
-		return ResponseEntity.ok(userDetailsService.save(user));
+		return ResponseEntity.ok(userService.createUser(mapper.map(user,UserDto.class)));
 	}
-	@GetMapping(value = "/users-all")
+	@GetMapping(value = "api/v1/users-all")
 	public ResponseEntity<?> fetchAllUsers()throws Exception{
-		return ResponseEntity.ok(userDetailsService.loadUserByUsername("user"));
+		System.out.println("Fetch All Users Called from Controller");
+		return ResponseEntity.ok(mapper.map(userService.getAllUsers(), UserDto.class));
 	}
 	private void authenticate(String username, String password) throws Exception {
 		try {

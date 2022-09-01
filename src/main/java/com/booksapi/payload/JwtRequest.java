@@ -1,4 +1,4 @@
-package com.booksapi.model;
+package com.booksapi.payload;
 
 import lombok.Getter;
 import lombok.Setter;

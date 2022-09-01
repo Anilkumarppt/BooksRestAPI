@@ -15,7 +15,7 @@ import javax.persistence.OneToMany;
 public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer authorId;
+    private int authorId;
     private String authorName;
     @Column(name = "author_emailId")
     private String emailId;

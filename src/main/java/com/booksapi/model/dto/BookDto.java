@@ -10,13 +10,14 @@ import java.util.Date;
 @Setter
 @ToString
 public class BookDto {
-    private Long bookId;
+    private int bookId;
     private String title;
     private Date publishedDate;
     private Float price;
-    private Integer catId;
+    private Integer genreId;
     private String bookDes;
     private Integer authorId;
     private String book_image;
+    private Float rating;
 
 }

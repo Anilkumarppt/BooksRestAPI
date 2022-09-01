@@ -7,6 +7,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "books")
@@ -15,7 +17,7 @@ import java.util.Date;
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long bookId;
+    private int bookId;
 
     @Column(name="title")
     private String title;
@@ -25,15 +27,21 @@ public class Book {
 
     private Float price;
 
-    @Column(name = "category_id")
-    private Integer catId;
+    @Column(name = "genre_id")
+    private int genreId;
 
     @Column(columnDefinition="TEXT")
     private String  bookDes;
 
     @Column(name = "author_id")
-    private Integer authorId;
+    private int authorId;
 
     @Column(name="book_poster")
     private String book_image;
+
+    private float rating;
+
+
+
+
 }

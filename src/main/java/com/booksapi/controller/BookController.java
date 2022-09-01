@@ -25,4 +25,40 @@ public class BookController {
     public ResponseEntity<List<BookDto>> fetchAllBooks(){
             return new ResponseEntity<>(booksService.fetchBooks(),HttpStatus.OK);
     }
+    @GetMapping("/book/{book_id}")
+    public ResponseEntity<?> fetchSingleBook(@PathVariable("book_id") int bookId){
+        BookDto bookDto;
+        try {
+            bookDto=booksService.getBook(bookId);
+            return ResponseEntity.ok(bookDto);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Book not found!",HttpStatus.NOT_FOUND);
+        }
+    }
+    @PostMapping("/update_book/{bookId}")
+    public ResponseEntity<?> updateBookItem(@RequestBody BookDto newBook,@PathVariable int bookId){
+        BookDto bookDto;
+        try{
+            bookDto=booksService.updateBook(newBook,bookId);
+            return ResponseEntity.ok(bookDto);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
+    }
+    @DeleteMapping("book/delete/{book_id}")
+    public ResponseEntity<?> deleteBookItem(@PathVariable("book_id") int bookId){
+        try {
+            booksService.deleteBook(bookId);
+            return ResponseEntity.ok("Book Deleted Successfully");
+        }
+        catch (Exception e){
+            return new ResponseEntity<>("Book not found",HttpStatus.NOT_FOUND);
+        }
+    }
+    @GetMapping("book/title")
+    public ResponseEntity<?> findByTitle(@RequestParam("title") String title) throws Exception {
+        List<BookDto> bookDto=booksService.getByTitle(title);
+        return ResponseEntity.ok(bookDto);
+    }
 }

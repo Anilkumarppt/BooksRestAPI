@@ -8,9 +8,9 @@ import java.util.List;
 public interface BooksService {
     BookDto createBook(BookDto bookDto);
     List<BookDto> fetchBooks();
-    BookDto getBook(Long bookId) throws Exception;
-    BookDto updateBook(BookDto updatedBook,Long bookId) throws Exception;
-    void deleteBook(Long bookId) throws Exception;
-    BookDto getByTitle(String title);
+    BookDto getBook(int bookId) throws Exception;
+    BookDto updateBook(BookDto updatedBook,int bookId) throws Exception;
+    void deleteBook(int bookId) throws Exception;
+    List<BookDto> getByTitle(String title) throws Exception;
 
 }

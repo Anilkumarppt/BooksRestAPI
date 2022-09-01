@@ -1,4 +1,4 @@
-package com.booksapi.model;
+package com.booksapi.payload;
 
 import java.io.Serializable;
 
