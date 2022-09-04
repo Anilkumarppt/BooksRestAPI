@@ -6,7 +6,7 @@ import java.util.List;
 
 
 public interface BooksService {
-    BookDto createBook(BookDto bookDto);
+    BookDto createBook(BookDto bookDto,int authorId);
     List<BookDto> fetchBooks();
     BookDto getBook(int bookId) throws Exception;
     BookDto updateBook(BookDto updatedBook,int bookId) throws Exception;

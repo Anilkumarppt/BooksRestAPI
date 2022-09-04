@@ -10,6 +10,7 @@ import com.booksapi.service.UserDetailsService;
 import com.booksapi.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -64,6 +65,15 @@ public class JwtController {
 			throw new Exception("USER_DISABLED", e);
 		} catch (BadCredentialsException e) {
 			throw new Exception("INVALID_CREDENTIALS", e);
+		}
+	}
+	@PutMapping(value = "/user/update/{user_id}")
+	private ResponseEntity<?> updateUserInfo(UserDto userDto,@PathVariable("user_id") int userid){
+		try {
+			UserDto update = userService.update(userDto, userid);
+			return new ResponseEntity<>(update, HttpStatus.OK);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 	}
 }

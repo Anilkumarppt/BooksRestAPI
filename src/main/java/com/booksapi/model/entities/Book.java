@@ -1,6 +1,7 @@
 package com.booksapi.model.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,18 +31,16 @@ public class Book {
     @Column(name = "genre_id")
     private int genreId;
 
-    @Column(columnDefinition="TEXT")
+    @Column(columnDefinition="TEXT",length = 100000)
     private String  bookDes;
 
-    @Column(name = "author_id")
-    private int authorId;
+    @ManyToOne
+    @JoinColumn(name = "authorId", referencedColumnName="authorId")
+    private Author author;
 
     @Column(name="book_poster")
     private String book_image;
 
     private float rating;
-
-
-
 
 }

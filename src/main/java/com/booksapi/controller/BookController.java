@@ -18,7 +18,7 @@ public class BookController {
 
     @PostMapping("/book")
     public ResponseEntity<?> addNewBook(@RequestBody BookDto bookDto){
-        BookDto book = this.booksService.createBook(bookDto);
+        BookDto book = this.booksService.createBook(bookDto,bookDto.getAuthorid());
         return new ResponseEntity<>(book, HttpStatus.CREATED);
     }
     @GetMapping("/all-books")
@@ -35,7 +35,7 @@ public class BookController {
             return new ResponseEntity<>("Book not found!",HttpStatus.NOT_FOUND);
         }
     }
-    @PostMapping("/update_book/{bookId}")
+    @PutMapping("/update_book/{bookId}")
     public ResponseEntity<?> updateBookItem(@RequestBody BookDto newBook,@PathVariable int bookId){
         BookDto bookDto;
         try{

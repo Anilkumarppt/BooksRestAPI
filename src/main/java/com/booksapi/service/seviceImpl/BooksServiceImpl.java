@@ -1,8 +1,10 @@
 package com.booksapi.service.seviceImpl;
 
 import com.booksapi.exception.ResourceNotFoundEx;
+import com.booksapi.model.entities.Author;
 import com.booksapi.model.entities.Book;
 import com.booksapi.model.dto.BookDto;
+import com.booksapi.repository.AuthorRepository;
 import com.booksapi.repository.BooksRepository;
 import com.booksapi.service.BooksService;
 import org.modelmapper.ModelMapper;
@@ -21,12 +23,18 @@ public class BooksServiceImpl implements BooksService {
     private BooksRepository booksRepository;
 
     @Autowired
+    private AuthorRepository authorRepository;
+    @Autowired
     private ModelMapper mapper;
 
     @Override
-    public BookDto createBook(BookDto bookDto) {
+    public BookDto createBook(BookDto bookDto,int authorId) {
         System.out.println("Before Saving Book Details  "+bookDto.toString());
+        Author author=authorRepository.findById(authorId).get();
+        if(bookDto.getBook_image()==null ||bookDto.getBook_image().isEmpty())
+            bookDto.setBook_image("default.png");
         Book book=this.mapper.map(bookDto,Book.class);
+        book.setAuthor(author);
         Book newBook=booksRepository.save(book);
         System.out.println("After Saving Book Details  "+book.toString());
         BookDto newBookDto=this.mapper.map(newBook,BookDto.class);
@@ -35,10 +43,13 @@ public class BooksServiceImpl implements BooksService {
 
     @Override
     public List<BookDto> fetchBooks() {
-        List<Book> bookList=booksRepository.findAll();
-        List<BookDto> bookDtoList=bookList.stream().map(book->this.mapper.map(book,BookDto.class)).
-                                    collect(Collectors.toList());
+        List<Book> bookList= booksRepository.findAll();
+        List<BookDto> bookDtoList=bookList.stream().map(book->{
+            return this.mapper.map(book,BookDto.class);}
+                        ).collect(Collectors.toList());
         return bookDtoList;
+
+        //return bookDtoList;
     }
 
     @Override
@@ -49,6 +60,7 @@ public class BooksServiceImpl implements BooksService {
 
     @Override
     public BookDto updateBook(BookDto updatedBook, int bookId) throws Exception {
+        Author author=authorRepository.findById(updatedBook.getAuthorid()).get();
         Book book=booksRepository.findById(bookId).orElseThrow(()->new ResourceNotFoundEx("Book not found",HttpStatus.NOT_FOUND));
         //book.setBookId(updatedBook.getBookId());
         book.setBookDes(updatedBook.getBookDes());
@@ -57,7 +69,7 @@ public class BooksServiceImpl implements BooksService {
         book.setTitle(updatedBook.getTitle());
         book.setGenreId(updatedBook.getGenreId());
         book.setRating(updatedBook.getRating());
-        book.setAuthorId(updatedBook.getAuthorId());
+        book.setAuthor(author);
         book.setPublishedDate(updatedBook.getPublishedDate());
         Book res=this.booksRepository.save(book);
         return mapper.map(res,BookDto.class);

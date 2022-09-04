@@ -1,5 +1,7 @@
 package com.booksapi.model.dto;
 
+import com.booksapi.model.entities.Author;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -14,9 +16,11 @@ public class BookDto {
     private String title;
     private Date publishedDate;
     private Float price;
-    private Integer genreId;
+    private int genreId;
     private String bookDes;
-    private Integer authorId;
+    @JsonIgnore
+    private int authorid;
+    private Author author;
     private String book_image;
     private Float rating;
 
