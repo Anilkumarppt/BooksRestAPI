@@ -1,12 +1,12 @@
 package com.booksapi.repository;
 
-import com.booksapi.model.entities.User;
+import com.booksapi.model.entities.BooksUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<User, Integer> {
-    User findByUsername(String username);
+public interface UserRepository extends JpaRepository<BooksUser, Integer> {
+    BooksUser findByUsername(String username);
 
-    Optional<User> findByEmailId(String emailId);
+    Optional<BooksUser> findByEmailId(String emailId);
 }

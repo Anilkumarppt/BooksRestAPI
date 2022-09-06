@@ -2,7 +2,7 @@ package com.booksapi.controller;
 
 import com.booksapi.config.JwtTokenUtil;
 import com.booksapi.model.dto.UserDto;
-import com.booksapi.model.entities.User;
+import com.booksapi.model.entities.BooksUser;
 import com.booksapi.payload.JwtRequest;
 import com.booksapi.payload.LoginAPIResponse;
 import com.booksapi.service.UserDetailsService;
@@ -48,8 +48,8 @@ public class JwtController {
     }
 
     @PostMapping(value = "/register")
-    public ResponseEntity<?> saveUser(@RequestBody User user) throws Exception {
-        return ResponseEntity.ok(userService.createUser(mapper.map(user, UserDto.class)));
+    public ResponseEntity<?> saveUser(@RequestBody BooksUser booksUser) throws Exception {
+        return ResponseEntity.ok(userService.createUser(mapper.map(booksUser, UserDto.class)));
     }
 
     @GetMapping(value = "api/v1/users-all")

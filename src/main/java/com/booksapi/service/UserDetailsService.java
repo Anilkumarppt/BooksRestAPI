@@ -1,6 +1,6 @@
 package com.booksapi.service;
 
-import com.booksapi.model.entities.User;
+import com.booksapi.model.entities.BooksUser;
 import com.booksapi.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,19 +20,19 @@ public class UserDetailsService implements org.springframework.security.core.use
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userDao.findByUsername(username);
-        if (user == null) {
+        BooksUser booksUser = userDao.findByUsername(username);
+        if (booksUser == null) {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
+        return new org.springframework.security.core.userdetails.User(booksUser.getUsername(), booksUser.getPassword(),
                 new ArrayList<>());
     }
 
-    public User save(User user) {
-        User newUser = new User();
-        newUser.setUsername(user.getUsername());
-        newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
-        newUser.setEmailId(user.getEmailId());
-        return userDao.save(newUser);
+    public BooksUser save(BooksUser booksUser) {
+        BooksUser newBooksUser = new BooksUser();
+        newBooksUser.setUsername(booksUser.getUsername());
+        newBooksUser.setPassword(bcryptEncoder.encode(booksUser.getPassword()));
+        newBooksUser.setEmailId(booksUser.getEmailId());
+        return userDao.save(newBooksUser);
     }
 }

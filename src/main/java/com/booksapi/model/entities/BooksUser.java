@@ -7,10 +7,10 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "user")
+@Table(name = "booksuser")
 @Getter
 @Setter
-public class User {
+public class BooksUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -21,7 +21,7 @@ public class User {
     @Column
     private String emailId;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "booksUser", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Reservation> reservations;
 
 }

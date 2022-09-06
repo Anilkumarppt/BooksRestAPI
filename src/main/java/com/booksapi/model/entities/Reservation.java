@@ -18,7 +18,7 @@ public class Reservation {
 
     @OneToOne
     @JoinColumn(name = "user_user_id")
-    private User user;
+    private BooksUser booksUser;
 
     @OneToOne
     @JoinColumn(name = "book_book_id")
