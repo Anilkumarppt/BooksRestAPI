@@ -83,11 +83,12 @@ public class FilesServiceImpl implements FilesDBService {
 
     @Override
     public FilesSystemData uploadFileToFileSystem(MultipartFile file, String path) throws IOException {
-
+        //path=ProfileImage/Profile/author/1
         String fileName = file.getOriginalFilename();
         String extension = fileName.substring(fileName.lastIndexOf("."));
         String newFileNameWithExtension = UUID.randomUUID().toString() + extension;
-        String originalPath = path + File.separator + newFileNameWithExtension;
+        String originalPath = path + File.separator+newFileNameWithExtension;
+        //ProfileImage/Profile/author+newFileNameWithExtension
         File file1 = new File(path);
         if (!file1.exists()) {
             boolean mkdirs = file1.mkdirs();
@@ -96,6 +97,7 @@ public class FilesServiceImpl implements FilesDBService {
         Files.copy(file.getInputStream(), Paths.get(originalPath));
         FilesSystemData filesSystemData=new FilesSystemData(file.getOriginalFilename(),file.getContentType(),file.getSize(),newFileNameWithExtension);
         FilesSystemData savedFile = fileSystemRepository.save(filesSystemData);
+        //http://localhost:8087/ProfileImage/Profile/08c10e4d-7658-4f43-a687-b8b042463085.jpeg
         return savedFile;
     }
 

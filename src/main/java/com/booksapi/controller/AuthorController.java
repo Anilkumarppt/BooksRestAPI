@@ -8,6 +8,7 @@ import com.booksapi.payload.APIResponse;
 import com.booksapi.payload.FileResponse;
 import com.booksapi.service.AuthorService;
 import com.booksapi.service.FilesDBService;
+import com.booksapi.util.FileUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -129,13 +130,16 @@ public class AuthorController {
             throws IOException {
 
         AuthorDto author = this.authorService.getAuthor(authorId);
-        FilesSystemData filesSystemData = filesDBService.uploadFileToFileSystem(file, local_path+"/author");
+        FileUtil fileUtil=new FileUtil();
+        //local_path="ProfileImage/Profile/"
+        String path=local_path+"author/"+authorId;
+        FilesSystemData filesSystemData = filesDBService.uploadFileToFileSystem(file, path);
 
         System.out.println(filesSystemData.getFilePath());
 
         String fileDownloadUri = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path("/"+local_path+"/")
+                .path("/"+path+"/")
                 .path(String.valueOf(filesSystemData.getFilePath()))
                 .toUriString();
 

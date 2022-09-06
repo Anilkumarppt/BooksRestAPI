@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,6 +45,7 @@ public class BooksServiceImpl implements BooksService{
     public List<BookDto> fetchBooks() {
         List<Book> bookList= booksRepository.findAll();
         List<BookDto> bookDtoList=bookList.stream().map(book->{
+            book.getAuthor().setBookList(new ArrayList<>());
             return this.mapper.map(book,BookDto.class);}
                         ).collect(Collectors.toList());
         return bookDtoList;
@@ -59,7 +61,7 @@ public class BooksServiceImpl implements BooksService{
 
     @Override
     public BookDto updateBook(BookDto updatedBook, int bookId) throws Exception {
-        Author author=authorRepository.findById(updatedBook.getAuthorid()).get();
+        Author author=authorRepository.findById(updatedBook.getAuthorId()).get();
         Book book=booksRepository.findById(bookId).orElseThrow(()->new ResourceNotFoundEx("Book not found",HttpStatus.NOT_FOUND));
         //book.setBookId(updatedBook.getBookId());
         book.setBookDes(updatedBook.getBookDes());
