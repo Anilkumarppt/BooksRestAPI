@@ -1,11 +1,10 @@
 package com.booksapi.model.entities;
 
-import com.booksapi.model.User;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
+
 @Table(name = "reservation")
 @Entity
 @Getter

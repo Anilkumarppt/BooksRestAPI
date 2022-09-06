@@ -1,4 +1,4 @@
-package com.booksapi.model;
+package com.booksapi.model.entities;
 
 import com.booksapi.model.entities.Reservation;
 import lombok.Getter;

@@ -1,6 +1,6 @@
 package com.booksapi.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.booksapi.model.User;
+import com.booksapi.model.entities.User;
 
 import java.util.Optional;
 

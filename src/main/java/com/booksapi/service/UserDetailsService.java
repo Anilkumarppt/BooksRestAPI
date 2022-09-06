@@ -1,6 +1,6 @@
 package com.booksapi.service;
 
-import com.booksapi.model.User;
+import com.booksapi.model.entities.User;
 import com.booksapi.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;

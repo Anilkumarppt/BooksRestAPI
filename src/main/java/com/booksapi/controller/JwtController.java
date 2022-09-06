@@ -4,7 +4,8 @@ import com.booksapi.config.JwtTokenUtil;
 import com.booksapi.model.dto.UserDto;
 import com.booksapi.payload.JwtRequest;
 import com.booksapi.payload.JwtResponse;
-import com.booksapi.model.User;
+import com.booksapi.model.entities.User;
+import com.booksapi.payload.LoginAPIResponse;
 import com.booksapi.service.UserDetailsService;
 
 import com.booksapi.service.UserService;
@@ -41,12 +42,11 @@ public class JwtController {
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
 
 		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
-
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-
 		final String token = jwtTokenUtil.generateToken(userDetails);
+		final String finalToken="Bearer "+token;
+		return ResponseEntity.ok(new LoginAPIResponse(finalToken,"User Login Successfully!",HttpStatus.OK));
 
-		return ResponseEntity.ok(new JwtResponse(token));
 	}
 
 	@PostMapping(value = "/register")

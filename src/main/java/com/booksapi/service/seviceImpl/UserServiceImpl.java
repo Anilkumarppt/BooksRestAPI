@@ -1,7 +1,7 @@
 package com.booksapi.service.seviceImpl;
 
 import com.booksapi.exception.ResourceNotFoundEx;
-import com.booksapi.model.User;
+import com.booksapi.model.entities.User;
 import com.booksapi.model.dto.UserDto;
 import com.booksapi.repository.UserRepository;
 import com.booksapi.service.UserService;
