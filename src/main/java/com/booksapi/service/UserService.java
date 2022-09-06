@@ -9,7 +9,7 @@ public interface UserService {
 
     List<UserDto> getAllUsers();
 
-    UserDto getUser(int userId)  throws Exception;
+    UserDto getUser(int userId) throws Exception;
 
     UserDto update(UserDto userDetail, int userId);
 

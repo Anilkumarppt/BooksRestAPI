@@ -6,8 +6,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
-import javax.persistence.OneToMany;
-import javax.persistence.criteria.CriteriaBuilder;
 
 @Entity
 @Table(name = "author")
@@ -27,7 +25,7 @@ public class Author {
 
 
     @JsonIgnore
-    @OneToMany(mappedBy = "author",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Book> bookList;
 
 }

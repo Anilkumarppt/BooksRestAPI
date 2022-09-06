@@ -1,13 +1,12 @@
 package com.booksapi.controller;
 
-import com.booksapi.model.dto.AuthorDto;
+import com.booksapi.exception.ResourceNotFoundEx;
 import com.booksapi.model.dto.BookDto;
-import com.booksapi.model.entities.Book;
 import com.booksapi.model.entities.FilesSystemData;
-import com.booksapi.payload.APIResponse;
+import com.booksapi.payload.ErrorPayload;
+import com.booksapi.payload.FileUploadResponse;
 import com.booksapi.service.BooksService;
 import com.booksapi.service.FilesDBService;
-import com.booksapi.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -31,57 +30,60 @@ public class BookController {
     private FilesDBService filesDBService;
 
     @Value("${profile.image}")
-    private  String local_path;
+    private String local_path;
 
 
     @PostMapping("/book")
-    public ResponseEntity<?> addNewBook(@RequestBody BookDto bookDto){
-        BookDto book = this.booksService.createBook(bookDto,bookDto.getAuthorId());
+    public ResponseEntity<?> addNewBook(@RequestBody BookDto bookDto) {
+        BookDto book = this.booksService.createBook(bookDto, bookDto.getAuthorId());
         return new ResponseEntity<>(book, HttpStatus.CREATED);
     }
+
     @GetMapping("/all-books")
-    public ResponseEntity<List<BookDto>> fetchAllBooks(){
-        List<BookDto> bookDtoList=booksService.fetchBooks();
+    public ResponseEntity<List<BookDto>> fetchAllBooks() {
+        List<BookDto> bookDtoList = booksService.fetchBooks();
         List<BookDto> collect = bookDtoList.stream().map(bookDto -> {
             bookDto.setAuthorId(bookDto.getAuthor().getAuthorId());
             return bookDto;
         }).collect(Collectors.toList());
-        return new ResponseEntity<>(collect,HttpStatus.OK);
+        return new ResponseEntity<>(collect, HttpStatus.OK);
     }
+
     @GetMapping("/book/{book_id}")
-    public ResponseEntity<?> fetchSingleBook(@PathVariable("book_id") int bookId){
+    public ResponseEntity<?> fetchSingleBook(@PathVariable("book_id") int bookId) {
         BookDto bookDto;
         try {
-            bookDto=booksService.getBook(bookId);
+            bookDto = booksService.getBook(bookId);
             return ResponseEntity.ok(bookDto);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Book not found!",HttpStatus.NOT_FOUND);
+        } catch (ResourceNotFoundEx e) {
+            return new ResponseEntity<>(new ErrorPayload(e.getMessage(), e.getStatus()), e.getStatus());
         }
     }
+
     @PutMapping("/update_book/{bookId}")
-    public ResponseEntity<?> updateBookItem(@RequestBody BookDto newBook,@PathVariable int bookId){
+    public ResponseEntity<?> updateBookItem(@RequestBody BookDto newBook, @PathVariable int bookId) {
         BookDto bookDto;
-        try{
-            bookDto=booksService.updateBook(newBook,bookId);
+        try {
+            bookDto = booksService.updateBook(newBook, bookId);
             return ResponseEntity.ok(bookDto);
-        }
-        catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+        } catch (ResourceNotFoundEx e) {
+            return new ResponseEntity<>(new ErrorPayload(e.getMessage(), e.getStatus()), e.getStatus());
         }
     }
+
     @DeleteMapping("book/delete/{book_id}")
-    public ResponseEntity<?> deleteBookItem(@PathVariable("book_id") int bookId){
+    public ResponseEntity<?> deleteBookItem(@PathVariable("book_id") int bookId) {
         try {
             booksService.deleteBook(bookId);
             return ResponseEntity.ok("Book Deleted Successfully");
-        }
-        catch (Exception e){
-            return new ResponseEntity<>("Book not found",HttpStatus.NOT_FOUND);
+        } catch (ResourceNotFoundEx e) {
+            return new ResponseEntity<>("Book not found", HttpStatus.NOT_FOUND);
         }
     }
+
     @GetMapping("book/title")
     public ResponseEntity<?> findByTitle(@RequestParam("title") String title) throws Exception {
-        List<BookDto> bookDto=booksService.getByTitle(title);
+        List<BookDto> bookDto = booksService.getByTitle(title);
         return ResponseEntity.ok(bookDto);
     }
 
@@ -94,24 +96,25 @@ public class BookController {
         try {
             BookDto book = this.booksService.getBook(bookId);
 
+            String path = local_path + "book/" + bookId;
 
-            FilesSystemData filesSystemData = filesDBService.uploadFileToFileSystem(file, local_path+"/author");
+            FilesSystemData filesSystemData = filesDBService.uploadFileToFileSystem(file, path);
 
             System.out.println(filesSystemData.getFilePath());
 
             String fileDownloadUri = ServletUriComponentsBuilder
                     .fromCurrentContextPath()
-                    .path("/"+local_path+"/")
+                    .path("/" + path + "/")
                     .path(String.valueOf(filesSystemData.getFilePath()))
                     .toUriString();
 
-            System.out.println("Book Image "+fileDownloadUri);
+            System.out.println("Book Image " + fileDownloadUri);
             book.setBook_image(fileDownloadUri);
 
-            booksService.updateBook(book,bookId);
-
-            APIResponse apiResponse = new APIResponse("Uploaded Successfully", HttpStatus.OK, true);
-            return ResponseEntity.ok(apiResponse);
+            booksService.updateBook(book, bookId);
+            FileUploadResponse response = new FileUploadResponse(filesSystemData.getName(), fileDownloadUri, filesSystemData.getType(), filesSystemData.getFileSize());
+            //APIResponse apiResponse = new APIResponse("Uploaded Successfully", HttpStatus.OK, true);
+            return ResponseEntity.ok(response);
 
         } catch (Exception e) {
             throw new RuntimeException(e);

@@ -1,13 +1,12 @@
 package com.booksapi.repository;
 
 import com.booksapi.model.entities.Book;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
 
-public interface BooksRepository extends JpaRepository<Book,Integer> {
+public interface BooksRepository extends JpaRepository<Book, Integer> {
     //Optional<Book> findById(int bookId);
     //Optional<Book> findByTitle(String title);
 
@@ -16,7 +15,6 @@ public interface BooksRepository extends JpaRepository<Book,Integer> {
 
 
     List<Book> findByAuthorAuthorId(int authorId);
-
 
 
 }

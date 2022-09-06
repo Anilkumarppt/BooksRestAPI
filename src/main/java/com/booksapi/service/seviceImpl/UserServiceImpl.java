@@ -1,8 +1,8 @@
 package com.booksapi.service.seviceImpl;
 
 import com.booksapi.exception.ResourceNotFoundEx;
-import com.booksapi.model.entities.User;
 import com.booksapi.model.dto.UserDto;
+import com.booksapi.model.entities.User;
 import com.booksapi.repository.UserRepository;
 import com.booksapi.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -29,15 +29,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto createUser(UserDto user) {
-        User newUser=mapper.map(user,User.class);
+        User newUser = mapper.map(user, User.class);
 
-        String encodedPassword=this.passwordEncoder.encode(user.getPassword());
+        String encodedPassword = this.passwordEncoder.encode(user.getPassword());
         newUser.setEmailId(user.getEmailId());
         newUser.setPassword(encodedPassword);
         newUser.setEmailId(user.getEmailId());
         newUser.setUsername(user.getUsername());
-        User createdUser=userRepository.save(newUser);
-        UserDto userDto=mapper.map(createdUser,UserDto.class);
+        User createdUser = userRepository.save(newUser);
+        UserDto userDto = mapper.map(createdUser, UserDto.class);
         return userDto;
     }
 
@@ -54,29 +54,31 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUser(int userId) throws Exception {
-        User user=userRepository.findById(userId).orElseThrow(()->new ResourceNotFoundEx("User Not found!", HttpStatus.NOT_FOUND));
-        return mapper.map(user,UserDto.class);
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundEx("User Not found!", HttpStatus.NOT_FOUND));
+        return mapper.map(user, UserDto.class);
     }
 
     @Override
     public UserDto update(UserDto userDetail, int userId) {
-        User user =this.userRepository.findById(userId).get();
+        User user = this.userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundEx("User Not found!", HttpStatus.NOT_FOUND));
+        ;
         user.setUsername(userDetail.getUsername());
         user.setPassword(userDetail.getPassword());
         user.setEmailId(userDetail.getEmailId());
         user.setId(userDetail.getId());
-        return mapper.map(user,UserDto.class);
+        return mapper.map(user, UserDto.class);
     }
 
     @Override
     public void deleteUser(int userId) {
-        User user =this.userRepository.findById(userId).orElseThrow(()->new ResourceNotFoundEx("User not found",HttpStatus.NOT_FOUND));
+        User user = this.userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundEx("User not found", HttpStatus.NOT_FOUND));
         userRepository.delete(user);
     }
 
     @Override
     public UserDto getUserByEmail(String email) {
-        User user=this.userRepository.findByEmailId(email).get();
-        return mapper.map(user,UserDto.class);
+        User user = this.userRepository.findByEmailId(email).orElseThrow(() -> new ResourceNotFoundEx("User Not found!", HttpStatus.NOT_FOUND));
+        ;
+        return mapper.map(user, UserDto.class);
     }
 }

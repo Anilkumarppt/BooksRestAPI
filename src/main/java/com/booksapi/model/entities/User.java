@@ -1,10 +1,7 @@
 package com.booksapi.model.entities;
 
-import com.booksapi.model.entities.Reservation;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
-import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
 import java.util.Set;

@@ -1,15 +1,11 @@
 package com.booksapi.model.entities;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "books")
@@ -20,7 +16,7 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int bookId;
 
-    @Column(name="title")
+    @Column(name = "title")
     private String title;
 
     private Date publishedDate;
@@ -31,14 +27,14 @@ public class Book {
     @Column(name = "genre_id")
     private int genreId;
 
-    @Column(columnDefinition="TEXT",length = 100000)
-    private String  bookDes;
+    @Column(columnDefinition = "TEXT", length = 100000)
+    private String bookDes;
 
     @ManyToOne
-    @JoinColumn(name = "authorId", referencedColumnName="authorId")
+    @JoinColumn(name = "authorId", referencedColumnName = "authorId")
     private Author author;
 
-    @Column(name="book_poster")
+    @Column(name = "book_poster")
     private String book_image;
 
     private float rating;

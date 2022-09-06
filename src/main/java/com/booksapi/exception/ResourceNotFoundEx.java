@@ -1,8 +1,10 @@
 package com.booksapi.exception;
 
+import lombok.Data;
 import org.springframework.http.HttpStatus;
 
-public class ResourceNotFoundEx extends RuntimeException{
+@Data
+public class ResourceNotFoundEx extends RuntimeException {
     private String message;
     private HttpStatus status;
 

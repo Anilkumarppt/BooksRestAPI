@@ -1,11 +1,9 @@
 package com.booksapi.controller;
 
 import com.booksapi.model.dto.AuthorDto;
-import com.booksapi.model.dto.UserDto;
-import com.booksapi.model.entities.FilesModel;
 import com.booksapi.model.entities.FilesSystemData;
 import com.booksapi.payload.APIResponse;
-import com.booksapi.payload.FileResponse;
+import com.booksapi.payload.FileUploadResponse;
 import com.booksapi.service.AuthorService;
 import com.booksapi.service.FilesDBService;
 import com.booksapi.util.FileUtil;
@@ -14,22 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.security.Principal;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -44,7 +33,7 @@ public class AuthorController {
     @Autowired
     private ModelMapper mapper;
     @Value("${profile.image}")
-    private  String local_path;
+    private String local_path;
 
     @PostMapping("/author")
     public ResponseEntity<?> createAuthor(@RequestBody AuthorDto authorDto) {
@@ -130,28 +119,27 @@ public class AuthorController {
             throws IOException {
 
         AuthorDto author = this.authorService.getAuthor(authorId);
-        FileUtil fileUtil=new FileUtil();
+        FileUtil fileUtil = new FileUtil();
         //local_path="ProfileImage/Profile/"
-        String path=local_path+"author/"+authorId;
+        String path = local_path + "author/" + authorId;
         FilesSystemData filesSystemData = filesDBService.uploadFileToFileSystem(file, path);
+        //FileUploadResponse fileUploadResponse=filesDBService.uploadFileToFileSystem(file,path);
 
         System.out.println(filesSystemData.getFilePath());
 
         String fileDownloadUri = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path("/"+path+"/")
+                .path("/" + path + "/")
                 .path(String.valueOf(filesSystemData.getFilePath()))
                 .toUriString();
 
-        System.out.println("Author Image "+fileDownloadUri);
+        System.out.println("Author Image " + fileDownloadUri);
         author.setImage(fileDownloadUri);
 
         authorService.updateAuthor(author, authorId);
-
-        APIResponse apiResponse = new APIResponse("Uploaded Successfully", HttpStatus.OK, true);
-        return ResponseEntity.ok(apiResponse);
+        FileUploadResponse uploadResponse = new FileUploadResponse(filesSystemData.getName(), fileDownloadUri, filesSystemData.getType(), filesSystemData.getFileSize());
+        return ResponseEntity.ok(uploadResponse);
 
     }
-
 
 }

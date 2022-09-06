@@ -23,11 +23,11 @@ public class BookDto {
     private String book_image;
     private Float rating;
 
-    public void setAuthorId(int authorId){
-        if(author!=null && author.getAuthorId()!=0)
-            this.authorId =author.getAuthorId();
+    public void setAuthorId(int authorId) {
+        if (author != null && author.getAuthorId() != 0)
+            this.authorId = author.getAuthorId();
         else
-            this.authorId=authorId;
+            this.authorId = authorId;
     }
 
 }

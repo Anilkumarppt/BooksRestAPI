@@ -9,18 +9,17 @@ import java.io.Serializable;
 @Setter
 public class JwtRequest implements Serializable {
 
-	private static final long serialVersionUID = 5926468583005150707L;
-	
-	private String username;
-	private String password;
-	
-	//default constructor for JSON Parsing
-	public JwtRequest()
-	{
-	}
+    private static final long serialVersionUID = 5926468583005150707L;
 
-	public JwtRequest(String username, String password) {
-		this.setUsername(username);
-		this.setPassword(password);
-	}
+    private String username;
+    private String password;
+
+    //default constructor for JSON Parsing
+    public JwtRequest() {
+    }
+
+    public JwtRequest(String username, String password) {
+        this.setUsername(username);
+        this.setPassword(password);
+    }
 }

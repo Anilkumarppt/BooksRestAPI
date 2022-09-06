@@ -6,7 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class SpringBootJwtApplicationTests {
 
 
-	void contextLoads() {
-	}
+    void contextLoads() {
+    }
 
 }

@@ -28,9 +28,10 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Autowired
     private BooksRepository booksRepository;
+
     @Override
     public AuthorDto getAuthor(int id) {
-        Author author=authorRepository.findById(id).orElseThrow(()->new ResourceNotFoundEx("Resource Not Found", HttpStatus.NOT_FOUND));
+        Author author = authorRepository.findById(id).orElseThrow(() -> new ResourceNotFoundEx("Resource Not Found", HttpStatus.NOT_FOUND));
       /*  List<Book> byAuthor = booksRepository.findByAuthor(author.getAuthorId());
         author.setBookList(byAuthor);
         AuthorDto authorDto=mapper.map(author,AuthorDto.class);
@@ -42,14 +43,14 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public AuthorDto createAuthor(AuthorDto authorDto) {
-        Author newAuthor=new Author();
+        Author newAuthor = new Author();
         newAuthor.setAuthorId(authorDto.getAuthorId());
         newAuthor.setBio(authorDto.getBio());
         newAuthor.setAuthorName(authorDto.getAuthorName());
         newAuthor.setEmailId(authorDto.getEmailId());
         newAuthor.setImage(authorDto.getImage());
         newAuthor.setAuthorId(authorDto.getAuthorId());
-        if(authorDto.getImage()==null || authorDto.getImage().isEmpty())
+        if (authorDto.getImage() == null || authorDto.getImage().isEmpty())
             authorDto.setImage("default.png");
         /*List<Book> byAuthor = booksRepository.findByAuthor(authorDto.getAuthorId());
         newAuthor.setBookList(byAuthor);
@@ -63,8 +64,8 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public List<AuthorDto> getAllAuthors() {
-        List<Author> authorList=authorRepository.findAll();
-        List<AuthorDto> authorDtosList=authorList.stream().map(author -> {
+        List<Author> authorList = authorRepository.findAll();
+        List<AuthorDto> authorDtosList = authorList.stream().map(author -> {
                     author.setBookList(new ArrayList<>());
                     return this.mapper.map(author, AuthorDto.class);
                 }
@@ -73,8 +74,8 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public AuthorDto updateAuthor(AuthorDto authorDto,int authorId) {
-        Author newAuthor=authorRepository.findById(authorId).orElseThrow(()->new ResourceNotFoundEx("Resource Not Found", HttpStatus.NOT_FOUND));
+    public AuthorDto updateAuthor(AuthorDto authorDto, int authorId) {
+        Author newAuthor = authorRepository.findById(authorId).orElseThrow(() -> new ResourceNotFoundEx("Resource Not Found", HttpStatus.NOT_FOUND));
         //newAuthor.setAuthorId(authorDto.getAuthorId());
         newAuthor.setBio(authorDto.getBio());
         newAuthor.setAuthorName(authorDto.getAuthorName());
@@ -88,16 +89,18 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public void deleteAuthor(int id) {
-        Author newAuthor=authorRepository.findById(id).orElseThrow(()->new ResourceNotFoundEx("Resource Not Found", HttpStatus.NOT_FOUND));
+        Author newAuthor = authorRepository.findById(id).orElseThrow(() -> new ResourceNotFoundEx("Resource Not Found", HttpStatus.NOT_FOUND));
         authorRepository.delete(newAuthor);
     }
-    private AuthorDto updatedAuthorDto(Author newAuthor){
+
+    private AuthorDto updatedAuthorDto(Author newAuthor) {
         List<Book> byAuthor = booksRepository.findByAuthorAuthorId(newAuthor.getAuthorId());
         newAuthor.setBookList(byAuthor);
-        Author result=authorRepository.save(newAuthor);
-        List<BookDto> collect = result.getBookList().stream().map(book ->{
-            return mapper.map(book, BookDto.class);}).collect(Collectors.toList());
-        AuthorDto authorDtoResult=mapper.map(result,AuthorDto.class);
+        Author result = authorRepository.save(newAuthor);
+        List<BookDto> collect = result.getBookList().stream().map(book -> {
+            return mapper.map(book, BookDto.class);
+        }).collect(Collectors.toList());
+        AuthorDto authorDtoResult = mapper.map(result, AuthorDto.class);
         authorDtoResult.setBookList(collect);
         return authorDtoResult;
     }
