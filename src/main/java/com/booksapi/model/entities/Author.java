@@ -18,8 +18,10 @@ public class Author {
     private String authorName;
     @Column(name = "author_emailId")
     private String emailId;
-    @Column(name = "author_bio")
+
+    @Column(name = "author_bio",columnDefinition = "TEXT", length = 100000)
     private String bio;
+
     @Column(name = "author_image")
     private String image;
 
